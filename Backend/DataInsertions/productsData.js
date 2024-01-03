@@ -148,6 +148,76 @@ async function insertProducts(){
       
     ).save()
 
+    await  new Product({
+      name: "Apex Training Mesh Short",
+      description: "Lightweight, breathable mesh shorts for conquering your workouts. Streamlined fit, supportive waistband, bold colors with reflective detailing.",
+      price: 35,
+      sizes: [
+        { size: "S", quantity: 8 },
+        { size: "M", quantity: 15 },
+        { size: "L", quantity: 12 },
+        { size: "XL", quantity: 5 },
+      ],
+      image: "https://cdn.shopify.com/s/files/1/1367/5201/products/ScV3MeshShort-Black-A2A3T-BBBB.A_ZH_ZH_828x.jpg?v=1647951928"
+    },
+    
+    ).save(),
+  await   new Product({
+      name: "Focus Lifting Gloves",
+      description: "Comfortable and durable lifting gloves for enhanced grip and hand protection. Padded palms, adjustable wrist straps, optimal support for weightlifting and gym sessions. ",
+      price: 25,
+      sizes: [
+        { size: "S", quantity: 7 },
+        { size: "M", quantity: 13 },
+        { size: "L", quantity: 10 },
+        { size: "XL", quantity: 3 },
+      ],
+      image: "https://cdn.shopify.com/s/files/1/1367/5207/products/WRAPLIFTINGGLOVESGAGV4216.A-Edit_ZH_ZH_b88df441-e45a-4eb1-9b67-dbae1f7f56eb_828x.jpg?v=1643899710"
+    },
+    
+    ).save()
+
+  await   new Product({
+      name: "Recharge Recovery Hoodie",
+      description: "Super-soft, breathable recovery hoodie for unwinding in style and comfort. Relaxed fit, moisture-wicking fabric, perfect for post-workout cool-down and restoration.",
+      price: 40,
+      sizes: [
+        { size: "S", quantity: 6 },
+        { size: "M", quantity: 12 },
+        { size: "L", quantity: 9 },
+        { size: "XL", quantity: 4 },
+      ],
+      image: "https://cdn.shopify.com/s/files/1/1367/5207/products/GFXRecoveryHoodie-Black-A3A6S-BBBB-0118.10_828x.jpg?v=1671450313"
+    },
+    
+    
+    ).save()
+
+await   new Product({
+  name: "Pulse Running Tee",
+  description: "Lightweight, breathable running tee for hitting the pavement with confidence. Reflective elements for low-light safety, quick-drying fabric for comfort on runs. ",
+  price: 30,
+  sizes: [
+    { size: "S", quantity: 5 },
+    { size: "M", quantity: 10 },
+    { size: "L", quantity: 8 },
+    { size: "XL", quantity: 2 },
+  ],
+  image: "https://cdn.shopify.com/s/files/1/0156/6146/products/PULSEMESHT-SHIRTJuipterGreen.A-Edit_CM_d420c2f9-af9a-4367-8227-1672760505aa_828x.jpg?v=1613989441"
+},  
+).save()
+
+await new Product (
+  {
+      name: "Terrain Hiking Backpack",
+      description: "Durable and versatile hiking backpack for any adventure. Multiple compartments, adjustable straps, hydration sleeve, keeps essentials organized and accessible on any trail.",
+      price: 50,
+      sizes: [{ size: "L", quantity: 15 }],
+      image: "https://cdn.shopify.com/s/files/1/1367/5207/files/SharkheadBackpackGSBlackI2A1K-BBBB-0355copy.jpg?v=1693303418"
+    },
+    
+).save()
+
 }
 
 

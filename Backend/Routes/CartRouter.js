@@ -3,14 +3,17 @@ const router     = express.Router();
 const CartController = require('../Controller/cartController'); 
 
 router
+.post('/create',CartController.CreateCart)
+
+router
 .route('/')
-.get(CartController.ViewMyCart)
 .post(CartController.AddToCart)
 .put(CartController.UpdateCartItemQuantity)
 
 
 router
 .route('/:id')
+.get(CartController.ViewMyCart)
 .delete(CartController.RemoveFromCart)
 
 router
@@ -23,6 +26,7 @@ router
 
 router
 .route('/track/:id')
-.get(CartController.trackOrder)
+.get(CartController.getSingleOrder)
+
 
 module.exports = router;

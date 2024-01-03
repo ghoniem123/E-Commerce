@@ -1,7 +1,7 @@
 import {useState, useEffect} from 'react'
 import axios from 'axios'
 import { useParams } from 'react-router-dom'
-import NavBar from '../components/NavBar'
+import NavBar from '../components/navbar'
 import '../styles/orderPage.css'
 const url = 'http://localhost:3001/api'
 import moment from 'moment';
@@ -21,7 +21,9 @@ export default function OrderPage() {
 
                await axios.get(`${url}/cart/checkout/${params.id}`,{withCredentials:true}).then((response) => {
                 setOrder(response.data);
-                console.log(response.data);
+                
+                 
+
             }).catch((error) => { console.log(error); })
         }
 
@@ -34,7 +36,7 @@ export default function OrderPage() {
 
     return (
         <>
-        <InfoHover open={isVisible} ordernum={order._id} close={ ()=>setVisible(false) } />
+        <InfoHover info={true} open={isVisible} ordernum={order._id} close={ ()=>setVisible(false) }  title={"Order Number : "} body={"Save the order number to be allow to track your order!!"} />
         <NavBar />
         <div className="order--div">
             <h1 className ="order--h1">{`Hi! ${order.firstname} ${order.lastname}!`}</h1>

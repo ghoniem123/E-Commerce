@@ -1,12 +1,16 @@
 
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import NavBar from '../components/NavBar';
+import NavBar from '../components/navbar';
 import '../styles/infopage.css';
+import InfoHover from '../components/infoHover';
 
 export default function InformationPage() {
         const [countries, setCountries] = useState([]);
         const nagivate = useNavigate();
+        const [isVisible, setVisible] = useState(false);
+        const [isValidEmail, setValidEmail] = useState(false);
+        const [isPhoneValid, setPhoneValid] = useState(false);
 
         fetch('https://restcountries.com/v3.1/all')
             .then(response => response.json())
@@ -32,7 +36,9 @@ export default function InformationPage() {
             const isPhoneCodeValid = phone_code_input?.value?.trim() !== '';
 
             if (isFilled && isEmailValid && isPhoneValid && isPhoneCodeValid && isCountrySelected) {
+                const cartId = window.sessionStorage.getItem('cartid');
                 window.sessionStorage.clear();
+                window.sessionStorage.setItem('cartid', cartId);
                 window.sessionStorage.setItem('email', inputs[2]?.value);
                 window.sessionStorage.setItem('first_name', inputs[0]?.value);
                 window.sessionStorage.setItem('last_name', inputs[1]?.value);
@@ -54,9 +60,11 @@ export default function InformationPage() {
                 nagivate("/pay");
             } else {
                 if (!isFilled || !isPhoneValid || !isPhoneCodeValid || !isCountrySelected) {
-                    alert('Please fill all the fields');
+                   setVisible(true);
                 } else if (!isEmailValid) {
-                    alert('Please enter a valid email address');
+                   setValidEmail(true);
+                }else if ( isNaN(parseInt(phone_number_input?.value)) || isNaN(parseInt(phone_code_input?.value)) ) {
+                    setPhoneValid(true);
                 }
             }
         }
@@ -64,11 +72,12 @@ export default function InformationPage() {
 
     return (
         <>
+        <InfoHover error={true} open={isVisible} close={ ()=>setVisible(false) }  title={"Fill all the Info"} body={"Please fill all the info fields !!"} />
+        <InfoHover error={true} open={isValidEmail} close={()=>setValidEmail(false)} title={"please enter a valid email"} body={"Like exampleXXX@gmail.com"} />
+        <InfoHover error={true} open={isPhoneValid} close={()=>setPhoneValid(false)} title={"please enter a valid phone number"} body={"Like 02 1234567890"} />
         <NavBar/>
         <div className="info--div">
             <h1 className="info--title">BILLING ADDRESS</h1>
-            {/* <hr /> */}
-
 
             <form className="info--form">
                 <p className="info--text">First Name</p>

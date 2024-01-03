@@ -32,5 +32,3 @@ module.exports = function authenticationMiddleware(req, res, next) {
   });
 };
 
-//think abt how to retrieve the product view then create cookie and the authentication middleware doenst need to be in the product router 
-// read about Oaurth and how to use it in the project

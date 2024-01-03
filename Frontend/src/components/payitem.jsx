@@ -10,7 +10,7 @@ export default function PayItem(props){
 
     useEffect(() => {
         async function getProduct() {
-            await axios.get(`${url}/products/${props.productId}`,{withCredentials:true}).then((response) => {
+            await axios.get(`${url}/products/view/${props.productId}`,{withCredentials:true}).then((response) => {
                 setProduct(response.data);
             }).catch((error) => { console.log(error); })
         }

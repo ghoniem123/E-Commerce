@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useEffect, useState } from "react";
 import axios from 'axios';
 const url = 'http://localhost:3001/api';
@@ -6,28 +7,32 @@ import { useParams } from 'react-router-dom';
 import bag from '../assets/bag.png';
 import Navbar from '../components/navbar';
 import "../styles/viewproduct.css";
+import InfoHover from '../components/infoHover';
+import { CartIDContext } from '../App';
+import { useContext } from "react";
+import React from 'react';
+
 
 export default function ViewPage() {
-    // const navigate = useNavigate();
+    console.log(window.sessionStorage.getItem('cartid'));
     const [product, setProduct] = useState(null);
-    const [selectedSize, setSelectedSize] = useState(null); // Added state for selected size
+    const [selectedSize, setSelectedSize] = useState(null); 
+    const [isVisible, setVisible] = useState(false);
+    const [isAdded, setAdded] = useState(false);
+    const [isVisibleQuantity, setVisibleQuantity] = useState(false);
     const params = useParams();
     let lastClickedButton = null;
     const buttons = document.querySelectorAll('.size--button');
+    const cartid= React.useContext(CartIDContext)
+
 
     async function addToCart() {
         if(!selectedSize) {
-            alert('Please select a size to add to the cart');
-            return;
+            return setVisible(true);
         }
-        await axios.post(`${url}/cart`, { productId: product._id, productSize: selectedSize }, { withCredentials: true })
+        await axios.post(`${url}/cart`, { productId: product._id, productSize: selectedSize,Cart: cartid }, { withCredentials: true })
         .then((response) => {
-            console.log(response.data);
-            console.log('Added to cart');
-            console.log(selectedSize);
-            console.log(response.status);
-            // navigate('/cart');
-            alert('Added to cart');
+           setAdded(true);
 
             buttons.forEach(button=>{
                 button.style.backgroundColor = ''; 
@@ -35,14 +40,16 @@ export default function ViewPage() {
                 button.style.color = ''; 
             
             })
+            setSelectedSize(null);
             
         })
-        .catch((error) => { console.log(error); });
+        .catch((error) => { setVisibleQuantity(true); });
     }
 
     useEffect(() => {
+
         async function getProduct() {
-            await axios.get(`${url}/products/${params.id}`,{withCredentials:true}).then((response) => {
+            await axios.get(`${url}/products/view/${params.id}`,{withCredentials:true}).then((response) => {
                 setProduct(response.data);
             }).catch((error) => { console.log(error); })
         }
@@ -74,6 +81,10 @@ export default function ViewPage() {
 
     return (
         <>
+        <InfoHover error={true} open={isVisible}  close={ ()=>setVisible(false) }  title={"You must select a size"} body={"Please select a size to add the product to the cart!!"} />
+        <InfoHover confirm={true} open={isAdded}  close={ ()=>setAdded(false) }  title={"Product added to cart"} body={`The ${product.name} has been added to the cart!!`} />
+        <InfoHover error={true} open={isVisibleQuantity}  close={ ()=>setVisibleQuantity(false) }  title={"you cant add more of this product"} body={"you have reached the max quantity of the product!!"} />
+
         <Navbar/>
         <div className='view--div'>
             <span className="view--img--span">
@@ -85,11 +96,11 @@ export default function ViewPage() {
                 <p className="view--price">{`$ ${product.price}`}</p>
                 <h6 className='view--h6'>SELECT SIZE</h6>
                 <div className="view-button-div">
-                    <button className='size--button' onClick={() => handleSizeClick('S')} disabled={product.sizes.find(size => size.size === 'S').quantity === 0}>S</button>
-                    <button className='size--button' onClick={() => handleSizeClick('M')} disabled={product.sizes.find(size => size.size === 'M').quantity === 0}>M</button>
-                    <button className='size--button' onClick={() => handleSizeClick('L')}disabled={product.sizes.find(size => size.size === 'L').quantity === 0}>L</button>
-                    <button className='size--button' onClick={() => handleSizeClick('XL')}disabled={product.sizes.find(size => size.size === 'XL').quantity === 0}>XL</button>
-                    <button className='size--button' onClick={() => handleSizeClick('XXL')}disabled={product.sizes.find(size => size.size === 'XXL').quantity === 0}>XXL</button>
+                { product.sizes.find(size => size.size === 'S')&&   <button className='size--button' onClick={() => handleSizeClick('S')}  disabled={product.sizes.find(size => size.size === 'S') === undefined || product.sizes.find(size => size.size === 'S').quantity === 0}>S</button>}
+                { product.sizes.find(size => size.size === 'M')&&    <button className='size--button' onClick={() => handleSizeClick('M')}  disabled={product.sizes.find(size=>size.size==="M")===undefined||product.sizes.find(size => size.size === 'M').quantity === 0}>M</button>}
+                { product.sizes.find(size => size.size === 'L')&&   <button className='size--button' onClick={() => handleSizeClick('L')} disabled={product.sizes.find(size=>size.size==="L")===undefined||product.sizes.find(size => size.size === 'L').quantity === 0}>L</button>}
+                { product.sizes.find(size => size.size === 'XL')&&   <button className='size--button' onClick={() => handleSizeClick('XL')} disabled={product.sizes.find(size=>size.size==="XL")===undefined||product.sizes.find(size => size.size === 'XL').quantity === 0}>XL</button>}
+                { product.sizes.find(size => size.size === 'XXL')&&   <button className='size--button' onClick={() => handleSizeClick('XXL')} disabled={product.sizes.find(size=>size.size==="XXL")===undefined || product.sizes.find(size => size.size === 'XXL').quantity === 0}>XXL</button>}
                 </div>
                 <button className='view--button' onClick={
                     ()=>{

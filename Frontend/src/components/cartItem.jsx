@@ -1,42 +1,55 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import close from '../assets/close.png';
 import plus from '../assets/plus.png';
 import minus from '../assets/minus.png';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 const url = 'http://localhost:3001/api';
 import axios from 'axios';
 import '../styles/cartItems.css';
+import InfoHover from './infoHover';
+import { CartIDContext } from '../App';
+import React from 'react';
+
+
 
 export default function CartItem(props){
- console.log(props.quantity)
+ const [product, setProduct] = useState(null);
+ const [quantity, setQuantity] = useState(props.quantity);
+ const [isVisible, setVisible] = useState(false);
+ const [isVisibleQuantity, setVisibleQuantity] = useState(false);
+ const cartid= React.useContext(CartIDContext)
+
+
 
    async function quantity_up(){
-        await axios.put(`${url}/cart`,{id:props._id,quantity:(props.quantity+1)},{withCredentials:true}).then((response) => {
-            window.location.reload();
-          }).catch((error) => { console.log(error); })
+        await axios.put(`${url}/cart`,{id:props._id,quantity:(quantity+1), Cart: cartid},{withCredentials:true}).then((response) => {
+            setQuantity(response.data.quantity);
+          }).catch((error) => { 
+        return  setVisibleQuantity(true);
+        })
     }
 
     async function quantity_down(){
-        if (props.quantity === 1) {
-            return alert("Quantity cannot be less than 1");
+        if (quantity === 1) {
+            return setVisible(true);
         }
 
-        await axios.put(`${url}/cart`,{id:props._id,quantity:(props.quantity-1)},{withCredentials:true}).then((response) => {
-            window.location.reload();
+        await axios.put(`${url}/cart`,{id:props._id,quantity:(quantity-1), Cart: cartid},{withCredentials:true}).then((response) => {
+            setQuantity(response.data.quantity);
           }).catch((error) => { console.log(error); })
     }
 
    async function remove(){
-        await axios.delete(`${url}/cart/${props._id}`,{withCredentials:true}).then((response) => {
-            window.location.reload();
+        await axios.delete(`${url}/cart/${props._id}?Cart=${cartid}`,{withCredentials:true}).then((response) => {
+            setProduct(null);
           }).catch((error) => { console.log(error); })
     }
 
-    const [product, setProduct] = useState(null);
 
     useEffect(() => {
         async function getProduct() {
-            await axios.get(`${url}/products/${props.productId}`,{withCredentials:true}).then((response) => {
+            await axios.get(`${url}/products/view/${props.productId}`,{withCredentials:true}).then((response) => {
                 setProduct(response.data);
             }).catch((error) => { console.log(error); })
         }
@@ -44,10 +57,14 @@ export default function CartItem(props){
     }, [props.productId]);
 
     if (!product) {
-        return <h1>Loading...</h1>
+        return ;
     }
 
     return (
+       product &&(
+        <>
+     <InfoHover error={true} open={isVisible}  close={ ()=>setVisible(false) }  title={"You cant decrease the product quantity below 1"} body={"If you want to remove the product press on the X button beside the product!!"} />
+     <InfoHover error={true} open={isVisibleQuantity}  close={ ()=>setVisibleQuantity(false) }  title={"you cant add more of this product"} body={"you have reached the max quantity of the product!!"} />
         <div className='cartitem--div'>
           <img className="cartitem--image" src={product.image} alt={product.name} />
           <span className="cartitem--span--1">
@@ -62,10 +79,12 @@ export default function CartItem(props){
           <button className='cartitem--remove--button' onClick={ ()=>{remove()} }><img src={close} className='close--img'/></button>
             <span className='cartitem--quantity--span'>
             <button className='quantity--button' onClick={ ()=>{ quantity_up()} }><img src={plus} className='plus--img'/></button>
-            <button className='quantity--display'>{props.quantity}</button>
+            <button className='quantity--display'>{quantity}</button>
             <button className='quantity--button' onClick={ ()=>{ quantity_down()} }><img src={minus} className='minus--img'/></button>
             </span>
           </span>
         </div>
+        </>
+       )
     );
 }

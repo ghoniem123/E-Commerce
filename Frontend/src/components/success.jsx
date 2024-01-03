@@ -8,12 +8,10 @@ import checked from "../assets/checked.png";
 
 
 export default function Success(props){
-    console.log("successsssssssssssssssssssss",props.orderNum);
     const navigate = useNavigate();
         if (!props.open) return null;
     
-    return ReactDOM.createPortal( //keey the child-parent relationship allow event delegation to the parent, if we used
-    //render instead of createPortal, the event will not be delegated to the parent component
+    return ReactDOM.createPortal( 
     <>
     <div className="success--div--overlay"/> 
         <div className="success--div"> 
@@ -28,5 +26,3 @@ export default function Success(props){
     </>   ,document.getElementById('pop-ups')
     )
     }
-
-    // use zIndex in styling the pop-up

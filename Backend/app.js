@@ -22,14 +22,12 @@ app.use(cors({
 
 
 //The backend routers : 
-const authenication = require('./Middleware/authenticationMiddleware');
-app.use(authenication)
+// const authenication = require('./Middleware/authenticationMiddleware');
+// app.use(authenication)
 const ProductRouter = require('./Routes/ProductRouter');
 app.use('/api/products', ProductRouter);
 const CartRouter = require('./Routes/CartRouter');
 app.use('/api/cart', CartRouter);
-const OrderRouter = require('./Routes/OrderRouter');
-app.use("/api/order", OrderRouter);
 
 mongoose.connect(`${process.env.DB_URL}/${process.env.DB_NAME}`,
 {useNewUrlParser:true, useUnifiedTopology:true})
@@ -42,31 +40,6 @@ app.use(function(req, res, next) {
 
 app.listen(process.env.PORT, ()=>console.log(`Server is running on port ${process.env.PORT}`));
 
-// app.get('/', async (req,res)=>{
-
-//             const token = jwt.sign( 
-//                   { User:
-//                     { Cart: 
-//                     await new Cart({
-//                     cartItems:[],
-//                     total:0,
-//                     })
-//                     .save()._id,
-//                   userType:'guest' }
-//                   }, 
-//                    secretKey
-//                 )   
-                                
-//          return res.cookie( 
-//                     "token", token,
-//                     {
-//                         withCredentials: true,
-//                         httpOnly:false,
-//                         SameSite : 'none',
-//                     }, 
-                    
-//                 );
-// });
 
 
 

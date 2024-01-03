@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useState } from "react";
 import axios from "axios";
 import Navbar from "../components/navbar";
@@ -7,29 +8,31 @@ import tracking from '../assets/tracking.png';
 import moment from 'moment';
 import visa from '../assets/visa.png'
 import delivery from '../assets/delivery.gif'
+import InfoHover from '../components/infoHover'
 
 export default function TrackPage() {
    const [order, setOrder] = useState(null);
+   const [isVisible, setVisible] = useState(false);
+    const [isOrder, setIsOrder] = useState(false);
 
     async function getOrder() {
         const orderId = document.querySelector('.track--input').value;
         if (orderId === null || orderId === undefined || orderId === '') {
-            alert('Please enter a valid order number');
-            return;
+            return   setVisible(true);
         }
         await axios.get(`${url}/${orderId}`,{withCredentials:true}).then((response) => {
             console.log(response.data);
             if (response.data === null || response.data === undefined) {
-                alert('Order not found, pls check the order number and try again or contact us for more information');
-                return;
+                return setIsOrder(true);
             }
             setOrder(response.data);
-            console.log(response.data);
-        }).catch((error) => { console.log(error); })
+        }).catch((error) => {  return setVisible(true); })
     }
 
     return (
         <>
+        <InfoHover error={true} open={isVisible} close={ ()=>setVisible(false) }  title={"Please enter a valid order number"} body={"Order number was provided to you after payment, check it in your email or if you have saved it!!"} />
+        <InfoHover info={true} open={isOrder} close={ ()=>setIsOrder(false) }  title={"Order is not found"} body={"pls check the order number and try again or contact us for more information!!"} />
         <Navbar/>
         <div className="track--div">
 

@@ -6,12 +6,15 @@ const url = "http://localhost:3001/api/cart";
 import PayItem from "../components/payitem";
 import wallet from "../assets/wallet.png";
 import Success from "../components/success";
+import { CartIDContext } from '../App';
+import React from 'react';
 
 export default function MakePayment(){
     const [payItems, setPayITems] = useState([]);
     const [total, setTotal] = useState(0);  
     const [orderNum, setOrderNum] = useState();  
     const [isVisible, setVisible] = useState(false);
+    const cartid= React.useContext(CartIDContext)
 
   async  function order(){
 
@@ -24,12 +27,12 @@ export default function MakePayment(){
         firstname: window.sessionStorage.getItem('first_name'),
         lastname:window.sessionStorage.getItem('last_name'),
         phone:window.sessionStorage.getItem('phone_number'),
+        Cart: cartid
        },
 
        {withCredentials:true}).then((response) => {
             setOrderNum(response.data._id);
             setVisible(true);
-            console.log("paypageeeeeeeeeeeeeeeeeeee",response.data);
           }).catch((error) => { console.log(error); })
     
     }
@@ -38,7 +41,8 @@ export default function MakePayment(){
     {  
       async function getCartItems(){
 
-        await axios.get(url ,{withCredentials:true}).then((response) => {
+
+        await axios.get(`${url}/${cartid}` ,{withCredentials:true}).then((response) => {
          console.log(response.data);
          setPayITems([...response.data.cartItems]); 
           setTotal(response.data.total);
